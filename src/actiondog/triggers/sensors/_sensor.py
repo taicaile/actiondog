@@ -2,8 +2,10 @@
 import logging
 import operator
 
+from triggers import TriggerBase
 
-class MeasureBase:
+
+class SensorBase(TriggerBase):
     """base class of all measures"""
 
     def __init__(self, threshold, cmp=operator.le, logger=None) -> None:

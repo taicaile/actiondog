@@ -2,10 +2,12 @@
 import logging
 import subprocess
 
+from .baseoperator import BaseOperator
+
 logger = logging.getLogger()
 
 
-class ShellCommand:
+class BashOperator(BaseOperator):
     """Executes shell commands in response to matched events."""
 
     def __init__(self, shell_command=None):
@@ -22,8 +24,9 @@ class ShellCommand:
                 check=True,
             )
             if proc.returncode != 0:
-                logger.error(proc.stdout)
-            logger.info(proc.stdout)
+                logger.error(proc.stdout.rstrip())
+            else:
+                logger.info(proc.stdout.rstrip())
             return proc.returncode
 
         except subprocess.CalledProcessError as e:

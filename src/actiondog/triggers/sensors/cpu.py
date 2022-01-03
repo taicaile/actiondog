@@ -3,10 +3,10 @@ import os
 
 import psutil
 
-from ._measure import MeasureBase
+from ._sensor import SensorBase
 
 
-class CPULoadMeasure(MeasureBase):
+class CPUSensor(SensorBase):
     """read cpu average load"""
 
     def read(self):

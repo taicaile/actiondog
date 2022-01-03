@@ -1,29 +1,23 @@
 """main entry"""
 import logging
-import time
 
-import helper
-from events import DirModifiedEvent
-from measures import CPULoadMeasure
+import utils
+from operators import BashOperator
+from pipeline import Pipeline
+from triggers.events import DirModifiedEvent
+from triggers.sensors import CPUSensor
 
-helper.logging_init()
+utils.logging_init()
 
 logger = logging.getLogger()
 
 if __name__ == "__main__":
 
-    events = [DirModifiedEvent("src")]
-    measures = [CPULoadMeasure(20)]
+    conditions = (DirModifiedEvent("src"), CPUSensor(20))
+    actions = [BashOperator(shell_command="echo $(date)")]
 
-    try:
-        while True:
-            if all(e.is_triggered() for e in events) and all(
-                e.is_triggered() for e in measures
-            ):
-                logger.info("is_triggered.")
-                for e in events:
-                    e.clear()
-            time.sleep(1)
-    except KeyboardInterrupt:
-        for e in events:
-            e.stop()
+    with Pipeline(conditions=conditions, actions=actions) as pipe:
+        try:
+            pipe.run()
+        except KeyboardInterrupt:
+            pipe.stop()
