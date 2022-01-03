@@ -1,0 +1,4 @@
+
+# isort global options
+[tool.isort]
+profile = "black"
